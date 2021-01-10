@@ -14,16 +14,51 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        let searchNC = UINavigationController(rootViewController: HomeVC())
-        let favoritesNC = UINavigationController(rootViewController: FavoritesVC())
-        
-        let tabbar = UITabBarController()
-        tabbar.viewControllers = [searchNC, favoritesNC]
-        
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        window?.rootViewController = tabbar
+        window?.rootViewController = createTabbar()
         window?.makeKeyAndVisible()
+    }
+    
+    func createHomeNC() -> UINavigationController {
+        let homeVC = HomeVC()
+        homeVC.title = "Drool"
+        homeVC.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house.fill"), tag: 0)
+        return UINavigationController(rootViewController: homeVC)
+    }
+    
+    func createFavoritesNC() -> UINavigationController {
+        let favoritesVC = FavoritesVC()
+        favoritesVC.title = "Favorites"
+        favoritesVC.tabBarItem = UITabBarItem(title: "Favorites", image: UIImage(systemName: "heart.fill"), tag: 1)
+//        favoritesVC.tabBarItem.selectedImage = favoritesVC.tabBarItem.selectedImage?.withTintColor(.systemRed, renderingMode: .alwaysOriginal)
+        return UINavigationController(rootViewController: favoritesVC)
+    }
+    
+    func createTabbar() -> UITabBarController {
+        let appearance = UITabBarItem.appearance()
+        let tabAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14), NSAttributedString.Key.foregroundColor : UIColor.white]
+        appearance.setTitleTextAttributes(tabAttributes, for: .normal)
+        let navAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24), NSAttributedString.Key.foregroundColor : UIColor.white]
+        
+        let homeNC = createHomeNC()
+        homeNC.navigationBar.barTintColor = .black
+        homeNC.navigationBar.barStyle = .black
+        homeNC.navigationBar.titleTextAttributes = navAttributes
+        
+        let favoritesNC = createFavoritesNC()
+        favoritesNC.navigationBar.barTintColor = .black
+        favoritesNC.navigationBar.barStyle = .black
+        favoritesNC.navigationBar.titleTextAttributes = navAttributes
+        
+        let tabBarController = UITabBarController()
+        UITabBar.appearance().tintColor = .systemRed
+        tabBarController.tabBar.barTintColor = .black
+        tabBarController.viewControllers = [homeNC, favoritesNC]
+        let tabBarheight = tabBarController.tabBar.frame.height
+        let tabBarWidth = (tabBarController.tabBar.frame.width/CGFloat(tabBarController.tabBar.items!.count) - 40)
+        tabBarController.tabBar.selectionIndicatorImage = UIImage().createSelectionIndicator(color: .systemRed, size: CGSize(width: tabBarWidth, height: tabBarheight), lineWidth: 3.0)
+        return tabBarController
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
