@@ -66,11 +66,12 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! CategoryCell
         cell.cellImageView.image = UIImage(named: categoryImageNames[indexPath.row])
+        cell.categoryLabel.text = "\(categoryImageNames[indexPath.row].capitalized) Cuisine"
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        print(indexPath.row)
     }
     
     

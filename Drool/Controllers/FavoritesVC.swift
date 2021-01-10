@@ -19,6 +19,7 @@ class FavoritesVC: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .systemBlue
+        view.addGradient()
     }
     
     //MARK: - Helpers

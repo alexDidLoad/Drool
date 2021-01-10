@@ -92,6 +92,14 @@ extension UIView {
         translatesAutoresizingMaskIntoConstraints = false
         widthAnchor.constraint(equalToConstant: width).isActive = true
     }
+    
+    func addGradient() {
+        let gradient = CAGradientLayer()
+        gradient.colors = [UIColor.clear.cgColor, UIColor.systemRed.cgColor]
+        gradient.locations = [0, 1]
+        self.layer.addSublayer(gradient)
+        gradient.frame = self.bounds
+    }
 }
 
 extension UIImage {
