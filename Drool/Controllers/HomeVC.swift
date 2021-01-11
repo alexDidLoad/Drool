@@ -43,7 +43,7 @@ class HomeVC: UIViewController {
     //MARK: - Helpers
     
     private func configureUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = .black
         configureCategoryTableView()
         configureFoodTableView()
     }
@@ -51,7 +51,7 @@ class HomeVC: UIViewController {
     private func configureCategoryTableView() {
         
         categoryTableView = UITableView()
-        categoryTableView.backgroundColor = UIColor.black.withAlphaComponent(0.9)
+        categoryTableView.backgroundColor = UIColor.white.withAlphaComponent(0.1)
         categoryTableView.rowHeight = 210
         categoryTableView.separatorColor = .white
         categoryTableView.delegate = self
@@ -71,7 +71,7 @@ class HomeVC: UIViewController {
     
     private func configureFoodTableView() {
         foodTableView = UITableView()
-        foodTableView.backgroundColor = UIColor.black.withAlphaComponent(0.9)
+        foodTableView.backgroundColor = UIColor.white.withAlphaComponent(0.1)
         foodTableView.rowHeight = 210
         foodTableView.separatorColor = .white
         foodTableView.delegate = self
@@ -81,12 +81,22 @@ class HomeVC: UIViewController {
         view.addSubview(foodTableView)
         foodTableView.setWidth(width: view.frame.width)
         foodTableView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
+                             leading: categoryTableView.trailingAnchor,
                              bottom: view.safeAreaLayoutGuide.bottomAnchor)
-        //animatable constraints
-        foodTableViewLeading = foodTableView.leadingAnchor.constraint(equalTo: view.trailingAnchor)
-        foodTableViewLeading.isActive = true
-        foodTableViewCenterX = foodTableView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        foodTableViewCenterX.isActive = false
+    }
+    
+    private func animateTableView(_ tableView: UITableView, atIndexPath indexPath: IndexPath) {
+        let selectedCell = tableView.cellForRow(at: indexPath)
+        
+        UIView.animate(withDuration: 0.5, delay: 0.0, usingSpringWithDamping: 1, initialSpringVelocity: .zero, options: .curveEaseInOut) {
+            selectedCell?.transform = CGAffineTransform(scaleX: 0.92, y: 0.92)
+        } completion: { (_) in
+            selectedCell?.transform = .identity
+        }
+        UIView.animate(withDuration: 0.8, delay: 0.2, usingSpringWithDamping: 1, initialSpringVelocity: .zero, options: .curveEaseInOut) {
+            tableView.alpha = 0
+            self.view.layoutIfNeeded()
+        }
     }
 }
 
@@ -99,21 +109,15 @@ extension HomeVC: UITableViewDelegate {
         if tableView == categoryTableView {
             categoryTableViewCenterX.isActive = false
             categoryTableViewTrailing.isActive = true
-            UIView.animate(withDuration: 0.5, delay: 0.0, usingSpringWithDamping: 1, initialSpringVelocity: .zero, options: .curveEaseInOut) {
-                self.view.layoutIfNeeded()
-            }
-            foodTableViewLeading.isActive = false
-            foodTableViewCenterX.isActive = true
-            UIView.animate(withDuration: 0.5, delay: 0.3, usingSpringWithDamping: 1, initialSpringVelocity: .zero, options: .curveEaseInOut) {
-                self.view.layoutIfNeeded()
-            }
+            animateTableView(tableView, atIndexPath: indexPath)
+            
             //change food.type to the selected cuisine
             food = Food(cuisine: categoryImageNames[indexPath.row])
             foodData.food = self.food
             //have foodtableview reload its image data
             foodTableView.reloadData()
         } else {
-            print(food.type)
+            print(foodData.selectedFood[indexPath.row])
         }
     }
 }

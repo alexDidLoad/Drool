@@ -23,7 +23,6 @@ struct Food {
     
     var type: cuisineType!
     var cuisine: String!
-    var selectedFood: [String]!
     
     //MARK: - Lifecycle
     
@@ -44,9 +43,9 @@ struct Food {
         case "mexican":
             type = .Mexican
         case "japanese":
-            type = .Chinese
+            type = .Japanese
         case "chinese":
-            type = .Thai
+            type = .Chinese
         case "thai":
             type = .Thai
         case "korean":
