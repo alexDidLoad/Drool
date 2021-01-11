@@ -8,18 +8,28 @@
 import UIKit
 import CoreLocation
 
-private let reuseIdentifier = "CategoryCell"
-private let categoryImageNames = ["american", "french", "italian", "mexican", "japanese", "chinese", "thai", "korean"]
+let categoryReuseIdentifier = "CategoryCell"
+let foodReuseIdentifier = "FoodCell"
+let categoryImageNames = ["american", "french", "italian", "mexican", "japanese", "chinese", "thai", "korean"]
 
 class HomeVC: UIViewController {
     
     //MARK: - UIComponents
     
+    private var categoryTableView: UITableView!
+    private var categoryTableViewTrailing: NSLayoutConstraint!
+    private var categoryTableViewCenterX: NSLayoutConstraint!
+    
+    private var foodTableView: UITableView!
+    private var foodTableViewLeading: NSLayoutConstraint!
+    private var foodTableViewCenterX: NSLayoutConstraint!
+    
     //MARK: - Properties
     
-    
     private var locationManager: CLLocationManager!
-    private var tableView: UITableView!
+    private let categoryData = CategoryCellDataSource()
+    private let foodData = FoodCellDataSource()
+    private var food: Food!
     
     //MARK: - Lifecycle
     
@@ -34,48 +44,78 @@ class HomeVC: UIViewController {
     
     private func configureUI() {
         view.backgroundColor = .white
-        configureTableView()
+        configureCategoryTableView()
+        configureFoodTableView()
     }
     
-    private func configureTableView() {
-        tableView = UITableView()
-        tableView.backgroundColor = UIColor.black.withAlphaComponent(0.9)
-        tableView.rowHeight = 210
-        tableView.separatorColor = .white
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(CategoryCell.self, forCellReuseIdentifier: reuseIdentifier)
+    private func configureCategoryTableView() {
         
-        view.addSubview(tableView)
-        tableView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
-                         leading: view.leadingAnchor,
-                         bottom: view.safeAreaLayoutGuide.bottomAnchor,
-                         trailing: view.trailingAnchor)
+        categoryTableView = UITableView()
+        categoryTableView.backgroundColor = UIColor.black.withAlphaComponent(0.9)
+        categoryTableView.rowHeight = 210
+        categoryTableView.separatorColor = .white
+        categoryTableView.delegate = self
+        categoryTableView.dataSource = categoryData
+        categoryTableView.register(CategoryCell.self, forCellReuseIdentifier: categoryReuseIdentifier)
+        
+        view.addSubview(categoryTableView)
+        categoryTableView.setWidth(width: view.frame.width)
+        categoryTableView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
+                                 bottom: view.safeAreaLayoutGuide.bottomAnchor)
+        //animatable constraints
+        categoryTableViewTrailing = categoryTableView.trailingAnchor.constraint(equalTo: view.leadingAnchor)
+        categoryTableViewTrailing.isActive = false
+        categoryTableViewCenterX = categoryTableView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        categoryTableViewCenterX.isActive = true
     }
     
+    private func configureFoodTableView() {
+        foodTableView = UITableView()
+        foodTableView.backgroundColor = UIColor.black.withAlphaComponent(0.9)
+        foodTableView.rowHeight = 210
+        foodTableView.separatorColor = .white
+        foodTableView.delegate = self
+        foodTableView.dataSource = foodData
+        foodTableView.register(FoodCell.self, forCellReuseIdentifier: foodReuseIdentifier)
+        
+        view.addSubview(foodTableView)
+        foodTableView.setWidth(width: view.frame.width)
+        foodTableView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
+                             bottom: view.safeAreaLayoutGuide.bottomAnchor)
+        //animatable constraints
+        foodTableViewLeading = foodTableView.leadingAnchor.constraint(equalTo: view.trailingAnchor)
+        foodTableViewLeading.isActive = true
+        foodTableViewCenterX = foodTableView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        foodTableViewCenterX.isActive = false
+    }
 }
 
-//MARK: - UITableViewDelegate & DataSource
+//MARK: - UITableViewDelegate
 
-extension HomeVC: UITableViewDelegate, UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categoryImageNames.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! CategoryCell
-        cell.cellImageView.image = UIImage(named: categoryImageNames[indexPath.row])
-        cell.categoryLabel.text = "\(categoryImageNames[indexPath.row].capitalized) Cuisine"
-        return cell
-    }
+extension HomeVC: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(indexPath.row)
+        
+        if tableView == categoryTableView {
+            categoryTableViewCenterX.isActive = false
+            categoryTableViewTrailing.isActive = true
+            UIView.animate(withDuration: 0.5, delay: 0.0, usingSpringWithDamping: 1, initialSpringVelocity: .zero, options: .curveEaseInOut) {
+                self.view.layoutIfNeeded()
+            }
+            foodTableViewLeading.isActive = false
+            foodTableViewCenterX.isActive = true
+            UIView.animate(withDuration: 0.5, delay: 0.3, usingSpringWithDamping: 1, initialSpringVelocity: .zero, options: .curveEaseInOut) {
+                self.view.layoutIfNeeded()
+            }
+            //change food.type to the selected cuisine
+            food = Food(cuisine: categoryImageNames[indexPath.row])
+            foodData.food = self.food
+            //have foodtableview reload its image data
+            foodTableView.reloadData()
+        } else {
+            print(food.type)
+        }
     }
-    
-    
-    
 }
 
 //MARK: - CLLocationManagerDelegate

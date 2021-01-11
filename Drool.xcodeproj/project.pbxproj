@@ -17,6 +17,10 @@
 		11CC54B825AA711000ACA40A /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC54B725AA711000ACA40A /* Extensions.swift */; };
 		11CC54BE25AA785000ACA40A /* LocationRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC54BD25AA785000ACA40A /* LocationRequestController.swift */; };
 		11CC54C525AAB15100ACA40A /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC54C425AAB15100ACA40A /* CategoryCell.swift */; };
+		11CC54CA25ABC9A600ACA40A /* FoodCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC54C925ABC9A600ACA40A /* FoodCell.swift */; };
+		11CC54D125ABE20900ACA40A /* Food.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC54D025ABE20900ACA40A /* Food.swift */; };
+		11CC54D625ABEF2900ACA40A /* CategoryCellDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC54D525ABEF2900ACA40A /* CategoryCellDataSource.swift */; };
+		11CC54D925ABEF3000ACA40A /* FoodCellDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC54D825ABEF3000ACA40A /* FoodCellDataSource.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +36,10 @@
 		11CC54B725AA711000ACA40A /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		11CC54BD25AA785000ACA40A /* LocationRequestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationRequestController.swift; sourceTree = "<group>"; };
 		11CC54C425AAB15100ACA40A /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
+		11CC54C925ABC9A600ACA40A /* FoodCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodCell.swift; sourceTree = "<group>"; };
+		11CC54D025ABE20900ACA40A /* Food.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Food.swift; sourceTree = "<group>"; };
+		11CC54D525ABEF2900ACA40A /* CategoryCellDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCellDataSource.swift; sourceTree = "<group>"; };
+		11CC54D825ABEF3000ACA40A /* FoodCellDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodCellDataSource.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +74,7 @@
 			children = (
 				11CC549725AA5ECF00ACA40A /* AppDelegate.swift */,
 				11CC549925AA5ECF00ACA40A /* SceneDelegate.swift */,
+				11CC54D325ABE21700ACA40A /* Model */,
 				11CC54C725AAB15C00ACA40A /* View */,
 				11CC54B425AA615100ACA40A /* Controllers */,
 				11CC54A325AA5ED200ACA40A /* Assets.xcassets */,
@@ -99,8 +108,19 @@
 			isa = PBXGroup;
 			children = (
 				11CC54C425AAB15100ACA40A /* CategoryCell.swift */,
+				11CC54C925ABC9A600ACA40A /* FoodCell.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		11CC54D325ABE21700ACA40A /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				11CC54D025ABE20900ACA40A /* Food.swift */,
+				11CC54D525ABEF2900ACA40A /* CategoryCellDataSource.swift */,
+				11CC54D825ABEF3000ACA40A /* FoodCellDataSource.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -174,11 +194,15 @@
 			files = (
 				11CC54B225AA613800ACA40A /* FavoritesVC.swift in Sources */,
 				11CC54B825AA711000ACA40A /* Extensions.swift in Sources */,
+				11CC54D925ABEF3000ACA40A /* FoodCellDataSource.swift in Sources */,
 				11CC549C25AA5ECF00ACA40A /* HomeVC.swift in Sources */,
 				11CC54C525AAB15100ACA40A /* CategoryCell.swift in Sources */,
 				11CC54BE25AA785000ACA40A /* LocationRequestController.swift in Sources */,
+				11CC54D125ABE20900ACA40A /* Food.swift in Sources */,
 				11CC549825AA5ECF00ACA40A /* AppDelegate.swift in Sources */,
 				11CC54A225AA5ECF00ACA40A /* Drool.xcdatamodeld in Sources */,
+				11CC54CA25ABC9A600ACA40A /* FoodCell.swift in Sources */,
+				11CC54D625ABEF2900ACA40A /* CategoryCellDataSource.swift in Sources */,
 				11CC549A25AA5ECF00ACA40A /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

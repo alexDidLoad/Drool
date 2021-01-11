@@ -1,13 +1,13 @@
 //
-//  CategoryCell.swift
+//  FoodCell.swift
 //  Drool
 //
-//  Created by Alexander Ha on 1/9/21.
+//  Created by Alexander Ha on 1/10/21.
 //
 
 import UIKit
 
-class CategoryCell: UITableViewCell {
+class FoodCell: UITableViewCell {
     
     //MARK: - UIComponents
     
@@ -34,6 +34,7 @@ class CategoryCell: UITableViewCell {
         view.layer.addSublayer(gradient)
         return view
     }()
+   
     //MARK: - Lifecycle
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -65,3 +66,4 @@ class CategoryCell: UITableViewCell {
         cellImageView.bringSubviewToFront(gradientView)
     }
 }
+
