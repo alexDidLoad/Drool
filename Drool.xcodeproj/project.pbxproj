@@ -23,7 +23,8 @@
 		11CC54D925ABEF3000ACA40A /* FoodCellDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC54D825ABEF3000ACA40A /* FoodCellDataSource.swift */; };
 		11CC54DD25AD22A400ACA40A /* FoodVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC54DC25AD22A400ACA40A /* FoodVC.swift */; };
 		11CC54E325AD716A00ACA40A /* MapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC54E225AD716A00ACA40A /* MapVC.swift */; };
-		11CC54E725AD74FB00ACA40A /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC54E625AD74FB00ACA40A /* MapView.swift */; };
+		11CC54E725AD74FB00ACA40A /* MapSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC54E625AD74FB00ACA40A /* MapSearchView.swift */; };
+		11CC54EC25AE183700ACA40A /* MapCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC54EB25AE183700ACA40A /* MapCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,7 +46,8 @@
 		11CC54D825ABEF3000ACA40A /* FoodCellDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodCellDataSource.swift; sourceTree = "<group>"; };
 		11CC54DC25AD22A400ACA40A /* FoodVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodVC.swift; sourceTree = "<group>"; };
 		11CC54E225AD716A00ACA40A /* MapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapVC.swift; sourceTree = "<group>"; };
-		11CC54E625AD74FB00ACA40A /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		11CC54E625AD74FB00ACA40A /* MapSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSearchView.swift; sourceTree = "<group>"; };
+		11CC54EB25AE183700ACA40A /* MapCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,7 +119,8 @@
 			children = (
 				11CC54C425AAB15100ACA40A /* CategoryCell.swift */,
 				11CC54C925ABC9A600ACA40A /* FoodCell.swift */,
-				11CC54E625AD74FB00ACA40A /* MapView.swift */,
+				11CC54E625AD74FB00ACA40A /* MapSearchView.swift */,
+				11CC54EB25AE183700ACA40A /* MapCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -215,11 +218,12 @@
 				11CC549C25AA5ECF00ACA40A /* HomeVC.swift in Sources */,
 				11CC54C525AAB15100ACA40A /* CategoryCell.swift in Sources */,
 				11CC54BE25AA785000ACA40A /* LocationRequestController.swift in Sources */,
+				11CC54EC25AE183700ACA40A /* MapCell.swift in Sources */,
 				11CC54D125ABE20900ACA40A /* Food.swift in Sources */,
 				11CC549825AA5ECF00ACA40A /* AppDelegate.swift in Sources */,
 				11CC54E325AD716A00ACA40A /* MapVC.swift in Sources */,
 				11CC54A225AA5ECF00ACA40A /* Drool.xcdatamodeld in Sources */,
-				11CC54E725AD74FB00ACA40A /* MapView.swift in Sources */,
+				11CC54E725AD74FB00ACA40A /* MapSearchView.swift in Sources */,
 				11CC54CA25ABC9A600ACA40A /* FoodCell.swift in Sources */,
 				11CC54D625ABEF2900ACA40A /* CategoryCellDataSource.swift in Sources */,
 				11CC54DD25AD22A400ACA40A /* FoodVC.swift in Sources */,

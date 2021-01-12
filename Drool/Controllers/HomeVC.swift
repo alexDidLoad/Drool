@@ -22,7 +22,7 @@ class HomeVC: UIViewController {
     
     //MARK: - Properties
     
-    private var locationManager: CLLocationManager!
+    var locationManager = CLLocationManager()
     private let categoryData = CategoryCellDataSource()
     private var foodVC = FoodVC()
     private var foodData = FoodCellDataSource()
@@ -67,7 +67,6 @@ extension HomeVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         animateTableView(tableView, atIndexPath: indexPath, presentingVC: foodVC)
         
-        //change food.type to the selected cuisine
         food = Food(cuisine: categoryImageNames[indexPath.row])
         foodData.food = self.food
         foodVC.foodData = foodData
@@ -82,7 +81,6 @@ extension HomeVC: CLLocationManagerDelegate {
         let locationVC = LocationRequestController()
         locationVC.modalPresentationStyle = .fullScreen
         
-        locationManager = CLLocationManager()
         locationManager.delegate = self
         
         switch locationManager.authorizationStatus {

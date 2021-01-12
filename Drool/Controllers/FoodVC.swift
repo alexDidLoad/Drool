@@ -17,7 +17,9 @@ class FoodVC: UIViewController {
     
     var foodData: FoodCellDataSource! {
         didSet {
-            foodTableView?.reloadData()
+            DispatchQueue.main.async {
+                self.foodTableView?.reloadData()
+            }
         }
     }
     
@@ -56,7 +58,8 @@ extension FoodVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let mapController = MapVC()
         mapController.modalPresentationStyle = .fullScreen
-        
+        mapController.foodCategory = foodData.selectedCategory[indexPath.row]
+       
         animateTableView(tableView, atIndexPath: indexPath, presentingVC: mapController)
     }
     

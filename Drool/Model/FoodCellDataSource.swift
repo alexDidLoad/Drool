@@ -7,7 +7,7 @@
 
 import UIKit
 
-let americanFood: [String] = ["Burgers", "Fried Chicken", "Steak", "Soup and Salad", "Hotdog", "Fast food"]
+let americanFood: [String] = ["Burgers", "Fried Chicken", "Steak", "Salad", "Hotdog", "Fast food"]
 let frenchFood: [String] = ["Pastries", "French Bistro", "Wine and Cheese"]
 let italianFood: [String] = ["Pasta", "Pizza", "Gelato", ]
 let mexicanFood: [String] = ["Tacos", "Burritos", "Elote", "Mole", "Tamales" ]
@@ -20,8 +20,8 @@ class FoodCellDataSource: NSObject, UITableViewDataSource {
     
     //MARK: - Properties
     
+    var selectedCategory: [String]!
     private var numberOfRows: Int!
-    private var selectedCategory: [String]!
     private var foodImage: UIImage?
     
     var food: Food! {
@@ -41,21 +41,21 @@ class FoodCellDataSource: NSObject, UITableViewDataSource {
         
         switch food.type {
         case .American:
-            foodImage = UIImage(named: americanFood[indexPath.row].lowercased())
+            foodImage = loadImageFor(foodCategory: americanFood, indexPath: indexPath)
         case .French:
-            foodImage = UIImage(named: frenchFood[indexPath.row].lowercased())
+            foodImage = loadImageFor(foodCategory: frenchFood, indexPath: indexPath)
         case .Italian:
-            foodImage = UIImage(named: italianFood[indexPath.row].lowercased())
+            foodImage = loadImageFor(foodCategory: italianFood, indexPath: indexPath)
         case .Mexican:
-            foodImage = UIImage(named: mexicanFood[indexPath.row].lowercased())
+            foodImage = loadImageFor(foodCategory: mexicanFood, indexPath: indexPath)
         case .Japanese:
-            foodImage = UIImage(named: japaneseFood[indexPath.row].lowercased())
+            foodImage = loadImageFor(foodCategory: japaneseFood, indexPath: indexPath)
         case .Chinese:
-            foodImage = UIImage(named: chineseFood[indexPath.row].lowercased())
+            foodImage = loadImageFor(foodCategory: chineseFood, indexPath: indexPath)
         case .Thai:
-            foodImage = UIImage(named: thaiFood[indexPath.row].lowercased())
+            foodImage = loadImageFor(foodCategory: thaiFood, indexPath: indexPath)
         case .Korean:
-            foodImage = UIImage(named: koreanFood[indexPath.row].lowercased())
+            foodImage = loadImageFor(foodCategory: koreanFood, indexPath: indexPath)
         case .none:
             foodImage = nil
         }
@@ -66,6 +66,11 @@ class FoodCellDataSource: NSObject, UITableViewDataSource {
     }
     
     //MARK: - Helpers
+    
+    private func loadImageFor(foodCategory: [String], indexPath: IndexPath) -> UIImage? {
+        guard let chosenImage = UIImage(named: foodCategory[indexPath.row].lowercased()) else { return nil }
+        return chosenImage
+    }
     
     private func calculateNumberOfRows() -> Int {
         switch food.type {
