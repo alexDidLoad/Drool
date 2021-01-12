@@ -11,9 +11,16 @@ class FoodCell: UITableViewCell {
     
     //MARK: - UIComponents
     
+    let containerView: UIView = {
+        let cView = UIView()
+        return cView
+    }()
+    
     let cellImageView: UIImageView = {
         let iv = UIImageView()
-        iv.contentMode = .scaleToFill
+        iv.contentMode = .scaleAspectFill
+        iv.layer.cornerRadius = 15
+        iv.layer.masksToBounds = true
         return iv
     }()
     
@@ -26,7 +33,7 @@ class FoodCell: UITableViewCell {
     }()
     
     private let gradientView: UIView = {
-        let view = UIView(frame: CGRect(x: 0, y: 50, width: 420, height: 160))
+        let view = UIView(frame: CGRect(x: 0, y: 28, width: 366, height: 160))
         let gradient = CAGradientLayer()
         gradient.colors = [UIColor.clear.cgColor, UIColor.black.cgColor, UIColor.black.cgColor]
         gradient.locations = [0, 0.9, 1]
@@ -34,7 +41,6 @@ class FoodCell: UITableViewCell {
         view.layer.addSublayer(gradient)
         return view
     }()
-   
     //MARK: - Lifecycle
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -50,10 +56,21 @@ class FoodCell: UITableViewCell {
     //MARK: - Helpers
     
     private func configureCell() {
+        backgroundColor = .clear
         selectionStyle = .none
-    
-        addSubview(cellImageView)
-        cellImageView.addConstraintsToFillView(view: self)
+        
+        addSubview(containerView)
+        containerView.anchor(top: topAnchor,
+                             leading: leadingAnchor,
+                             bottom: bottomAnchor,
+                             trailing: trailingAnchor,
+                             paddingTop: 12,
+                             paddingLeading: 12,
+                             paddingBottom: 12,
+                             paddingTrailing: 12)
+        
+        containerView.addSubview(cellImageView)
+        cellImageView.addConstraintsToFillView(view: containerView)
         
         cellImageView.addSubview(categoryLabel)
         categoryLabel.layer.zPosition = 1

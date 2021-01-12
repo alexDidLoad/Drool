@@ -7,9 +7,9 @@
 
 import UIKit
 
+//MARK: - UIView
+
 extension UIView {
-    
-    //MARK: - Anchors
     
     func addConstraintsToFillView(view: UIView) {
         self.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, paddingTop: 0, paddingLeading: 0, paddingBottom: 0, paddingTrailing: 0)
@@ -101,6 +101,26 @@ extension UIView {
         gradient.frame = self.bounds
     }
 }
+
+//MARK: - UIViewController
+
+extension UIViewController {
+    
+    func animateTableView(_ tableView: UITableView, atIndexPath indexPath: IndexPath, presentingVC: UIViewController? = nil) {
+        let selectedCell = tableView.cellForRow(at: indexPath)
+        
+        UIView.animate(withDuration: 0.5, delay: 0.0, usingSpringWithDamping: 1, initialSpringVelocity: .zero, options: .curveEaseInOut) {
+            selectedCell?.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+        } completion: { [weak self] _ in
+            self?.present(presentingVC!, animated: true)
+        }
+        UIView.animate(withDuration: 0.3, delay: 0.2, usingSpringWithDamping: 1, initialSpringVelocity: .zero, options: .curveEaseInOut) {
+            selectedCell?.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+        }
+    }
+}
+
+//MARK: - UIImage
 
 extension UIImage {
     

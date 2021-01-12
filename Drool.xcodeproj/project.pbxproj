@@ -21,6 +21,7 @@
 		11CC54D125ABE20900ACA40A /* Food.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC54D025ABE20900ACA40A /* Food.swift */; };
 		11CC54D625ABEF2900ACA40A /* CategoryCellDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC54D525ABEF2900ACA40A /* CategoryCellDataSource.swift */; };
 		11CC54D925ABEF3000ACA40A /* FoodCellDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC54D825ABEF3000ACA40A /* FoodCellDataSource.swift */; };
+		11CC54DD25AD22A400ACA40A /* FoodVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC54DC25AD22A400ACA40A /* FoodVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		11CC54D025ABE20900ACA40A /* Food.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Food.swift; sourceTree = "<group>"; };
 		11CC54D525ABEF2900ACA40A /* CategoryCellDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCellDataSource.swift; sourceTree = "<group>"; };
 		11CC54D825ABEF3000ACA40A /* FoodCellDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodCellDataSource.swift; sourceTree = "<group>"; };
+		11CC54DC25AD22A400ACA40A /* FoodVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +93,7 @@
 			children = (
 				11CC54BD25AA785000ACA40A /* LocationRequestController.swift */,
 				11CC549B25AA5ECF00ACA40A /* HomeVC.swift */,
+				11CC54DC25AD22A400ACA40A /* FoodVC.swift */,
 				11CC54B125AA613800ACA40A /* FavoritesVC.swift */,
 			);
 			path = Controllers;
@@ -203,6 +206,7 @@
 				11CC54A225AA5ECF00ACA40A /* Drool.xcdatamodeld in Sources */,
 				11CC54CA25ABC9A600ACA40A /* FoodCell.swift in Sources */,
 				11CC54D625ABEF2900ACA40A /* CategoryCellDataSource.swift in Sources */,
+				11CC54DD25AD22A400ACA40A /* FoodVC.swift in Sources */,
 				11CC549A25AA5ECF00ACA40A /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

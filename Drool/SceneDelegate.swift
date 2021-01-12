@@ -44,6 +44,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let homeNC = createHomeNC()
         homeNC.navigationBar.barTintColor = .black
         homeNC.navigationBar.barStyle = .black
+        homeNC.navigationBar.prefersLargeTitles = true
         homeNC.navigationBar.titleTextAttributes = navAttributes
         
         let favoritesNC = createFavoritesNC()
