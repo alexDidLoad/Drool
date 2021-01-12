@@ -54,7 +54,10 @@ class FoodVC: UIViewController {
 extension FoodVC: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let mapController = MapVC()
+        mapController.modalPresentationStyle = .fullScreen
         
+        animateTableView(tableView, atIndexPath: indexPath, presentingVC: mapController)
     }
     
 }

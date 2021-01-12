@@ -51,7 +51,6 @@ class LocationRequestController: UIViewController {
         super.viewDidLoad()
         
         configureUI()
-        
     }
     
     //MARK: - Selectors
