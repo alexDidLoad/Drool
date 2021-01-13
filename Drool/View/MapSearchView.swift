@@ -8,7 +8,7 @@
 import UIKit
 import MapKit
 
-private let reuseIdentifier = "MapCell"
+let reuseIdentifier = "MapCell"
 
 protocol MapSearchViewDelegate {
     
@@ -32,7 +32,8 @@ class MapSearchView: UIView {
     
     enum ExpansionState {
         case NotExpanded
-        case Expanded
+        case PartiallyExpanded
+        case FullyExpanded
     }
     
     var mapController: MapVC?
@@ -63,17 +64,27 @@ class MapSearchView: UIView {
         if sender.direction == .up {
             if expansionState == .NotExpanded {
                 animateSearchView(targetPosition: self.frame.origin.y - 250) { (_) in
-                    self.expansionState = .Expanded
+                    self.expansionState = .PartiallyExpanded
                 }
             }
+            if expansionState == .PartiallyExpanded {
+                animateSearchView(targetPosition: self.frame.origin.y - 460) { (_) in
+                    self.expansionState = .FullyExpanded
+                }
+            }
+            
         } else if sender.direction == .down {
-            if expansionState == .Expanded {
+            if expansionState == .FullyExpanded {
+                animateSearchView(targetPosition: self.frame.origin.y + 460) { (_) in
+                    self.expansionState = .PartiallyExpanded
+                }
+            }
+            if expansionState == .PartiallyExpanded {
                 animateSearchView(targetPosition: self.frame.origin.y + 250) { (_) in
                     self.expansionState = .NotExpanded
                 }
             }
         }
-        
     }
     
     //MARK: - Helpers
@@ -133,7 +144,7 @@ class MapSearchView: UIView {
 
 extension MapSearchView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return 10
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -141,7 +152,6 @@ extension MapSearchView: UITableViewDelegate, UITableViewDataSource {
         
         return cell
     }
-    
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
