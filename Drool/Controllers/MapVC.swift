@@ -41,11 +41,29 @@ class MapVC: UIViewController {
         return button
     }()
     
-    private var mapSearchView = MapSearchView()
+    var mapSearchView = MapSearchView()
+   
     private var mapView = MKMapView()
     
     //MARK: - Properties
     
+    
+    var phoneNumber: [String]! {
+        didSet {
+            phoneNumber.forEach { (number) in
+                self.fetchBusiness(withPhoneNumber: number) { (response, error) in
+                    if let response = response {
+                        response.forEach({self.restaurants.append($0)})
+                    }
+                }
+            }
+        }
+    }
+    var restaurants: [Restaurant] = [] {
+        didSet {
+            mapSearchView.restaurants = self.restaurants
+        }
+    }
     var foodCategory: String! {
         didSet {
             centerOnUserLocation(shouldLoadAnnotations: true)
@@ -53,7 +71,6 @@ class MapVC: UIViewController {
     }
     
     private lazy var locationManager = HomeVC().locationManager
-    private var route: MKRoute?
     
     //MARK: - Lifecycle
     
@@ -61,6 +78,7 @@ class MapVC: UIViewController {
         super.viewDidLoad()
         
         configureUI()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -73,6 +91,7 @@ class MapVC: UIViewController {
     
     @objc func handleCenterLocation() {
         centerOnUserLocation(shouldLoadAnnotations: false)
+        print(restaurants)
     }
     
     @objc func handleExit() {
@@ -179,19 +198,28 @@ class MapVC: UIViewController {
         guard let coordinate = locationManager.location?.coordinate else { return }
         let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 100, longitudinalMeters: 100)
         
-        
-        
+        ///fetch data from yelp
         
         searchBy(naturalLanguageQuery: query, region: region, coordinates: coordinate) { (response, error) in
-            guard let reponse = response else { return }
-            response?.mapItems.forEach({ mapItem in
+            guard let response = response else { return }
+            response.mapItems.forEach({ mapItem in
+                
                 let annotation = MKPointAnnotation()
                 annotation.title = mapItem.name
                 annotation.coordinate = mapItem.placemark.coordinate
                 self.mapView.addAnnotation(annotation)
+                
+                
+                var phoneArray = [String]()
+                let deleteCharacters: Set<Character> = ["(", ")", "-"]
+                var mappedNumber = mapItem.phoneNumber?.replacingOccurrences(of: " ", with: "")
+                mappedNumber?.removeAll(where: {deleteCharacters.contains($0)})
+                guard let number = mappedNumber else { return }
+                phoneArray.append(number)
+                self.phoneNumber = phoneArray
             })
             DispatchQueue.main.async {
-                self.mapSearchView.searchResults = reponse.mapItems
+                self.mapSearchView.searchResults = response.mapItems
             }
         }
     }
@@ -227,4 +255,3 @@ extension MapVC: MapCellDelegate {
         mapItem.openInMaps(launchOptions: [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving])
     }
 }
-

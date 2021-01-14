@@ -26,7 +26,7 @@ class MapSearchView: UIView {
         return view
     }()
     
-    private var tableView: UITableView!
+    var tableView: UITableView!
     
     //MARK: - Properties
     
@@ -35,14 +35,17 @@ class MapSearchView: UIView {
         case Expanded
     }
     
+    var restaurants: [Restaurant]? {
+        didSet {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
     var mapController: MapVC?
     var expansionState: ExpansionState!
     var delegate: MapSearchViewDelegate?
-    var searchResults: [MKMapItem]? {
-        didSet {
-            tableView.reloadData()
-        }
-    }
+    var searchResults: [MKMapItem]? 
     
     //MARK: - Lifecycle
     
@@ -61,6 +64,7 @@ class MapSearchView: UIView {
     
     @objc func handleSwipeGesture(sender: UISwipeGestureRecognizer) {
         if sender.direction == .up {
+            tableView.reloadData()
             if expansionState == .NotExpanded {
                 animateSearchView(targetPosition: self.frame.origin.y - 225) { (_) in
                     self.expansionState = .Expanded
@@ -139,20 +143,19 @@ class MapSearchView: UIView {
 
 extension MapSearchView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let searchResults = searchResults else { return 0}
-        return searchResults.count
+        guard let restaurants = restaurants else { return 0 }
+        return restaurants.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! MapCell
-        
         if let mapController = mapController {
             cell.delegate = mapController
         }
-        
         if let searchResults = searchResults {
             cell.mapItem = searchResults[indexPath.row]
         }
+        
         return cell
     }
     
