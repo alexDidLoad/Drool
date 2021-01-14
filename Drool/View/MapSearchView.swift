@@ -11,7 +11,7 @@ import MapKit
 let reuseIdentifier = "MapCell"
 
 protocol MapSearchViewDelegate {
-    
+   func didSelectAnnotation(withMapItem mapItem: MKMapItem)
 }
 
 class MapSearchView: UIView {
@@ -32,8 +32,7 @@ class MapSearchView: UIView {
     
     enum ExpansionState {
         case NotExpanded
-        case PartiallyExpanded
-        case FullyExpanded
+        case Expanded
     }
     
     var mapController: MapVC?
@@ -63,24 +62,13 @@ class MapSearchView: UIView {
     @objc func handleSwipeGesture(sender: UISwipeGestureRecognizer) {
         if sender.direction == .up {
             if expansionState == .NotExpanded {
-                animateSearchView(targetPosition: self.frame.origin.y - 250) { (_) in
-                    self.expansionState = .PartiallyExpanded
+                animateSearchView(targetPosition: self.frame.origin.y - 225) { (_) in
+                    self.expansionState = .Expanded
                 }
             }
-            if expansionState == .PartiallyExpanded {
-                animateSearchView(targetPosition: self.frame.origin.y - 460) { (_) in
-                    self.expansionState = .FullyExpanded
-                }
-            }
-            
         } else if sender.direction == .down {
-            if expansionState == .FullyExpanded {
-                animateSearchView(targetPosition: self.frame.origin.y + 460) { (_) in
-                    self.expansionState = .PartiallyExpanded
-                }
-            }
-            if expansionState == .PartiallyExpanded {
-                animateSearchView(targetPosition: self.frame.origin.y + 250) { (_) in
+            if expansionState == .Expanded {
+                animateSearchView(targetPosition: self.frame.origin.y + 225) { (_) in
                     self.expansionState = .NotExpanded
                 }
             }
@@ -113,12 +101,11 @@ class MapSearchView: UIView {
         tableView.register(MapCell.self, forCellReuseIdentifier: reuseIdentifier)
         
         addSubview(tableView)
+        tableView.setHeight(height: 275)
         tableView.anchor(top: indicatorView.bottomAnchor,
                          leading: leadingAnchor,
-                         bottom: bottomAnchor,
                          trailing: trailingAnchor,
-                         paddingTop: 8,
-                         paddingBottom: 100)
+                         paddingTop: 8)
     }
     
     private func configureGestureRecognizer() {
@@ -138,25 +125,48 @@ class MapSearchView: UIView {
             self.frame.origin.y = targetPosition
         }, completion: completion)
     }
+    
+    private func didSelectMapItem(withMapItems items: [MKMapItem], selectedMapItem: MKMapItem, atIndexPath indexPath: IndexPath) -> [MKMapItem] {
+        var items = items
+        items.remove(at: indexPath.row)
+        items.insert(selectedMapItem, at: 0)
+        items.removeSubrange(1..<items.count)
+        return items
+    }
 }
 
 //MARK: - UITableViewDelegate and DataSource
 
 extension MapSearchView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        guard let searchResults = searchResults else { return 0}
+        return searchResults.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! MapCell
         
+        if let mapController = mapController {
+            cell.delegate = mapController
+        }
+        
+        if let searchResults = searchResults {
+            cell.mapItem = searchResults[indexPath.row]
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let searchResults = searchResults else { return }
+        let selectedMapItem = searchResults[indexPath.row]
         
-        //TODO: Bring selected row to top and have 'GO' button appear with a heart button
-        print(indexPath.row)
+        delegate?.didSelectAnnotation(withMapItem: selectedMapItem)
+        self.searchResults = didSelectMapItem(withMapItems: searchResults, selectedMapItem: selectedMapItem, atIndexPath: indexPath)
+        
+        let firstIndexPath = IndexPath(row: 0, section: 0)
+        let cell = tableView.cellForRow(at: firstIndexPath) as? MapCell
+        cell?.animateButtonIn()
+       
     }
     
 }

@@ -6,6 +6,11 @@
 //
 
 import UIKit
+import MapKit
+
+protocol MapCellDelegate {
+    func getDirections(forMapItem mapItem: MKMapItem) 
+}
 
 class MapCell: UITableViewCell {
     
@@ -18,7 +23,7 @@ class MapCell: UITableViewCell {
         button.tintColor = .white
         button.backgroundColor = #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1)
         button.layer.cornerRadius = 5
-        button.alpha = 1
+        button.alpha = 0
         button.addTarget(self, action: #selector(handleGo), for: .touchUpInside)
         return button
     }()
@@ -44,7 +49,6 @@ class MapCell: UITableViewCell {
         view.setDimensions(height: 15, width: 15)
         view.layer.cornerRadius = 15 / 2
         view.layer.masksToBounds = true
-        view.backgroundColor = UIColor.systemRed.withAlphaComponent(0.5)
         return view
     }()
     
@@ -57,15 +61,29 @@ class MapCell: UITableViewCell {
     }()
     
     //MARK: - Properties
+
+    var delegate: MapCellDelegate?
     
-    var name: String! = "Test Cell"
     var price: String! = "$$$" {
         didSet {
             priceLabel.text = price
         }
     }
-    var isClosed: Bool! = false
+    var isClosed: Bool! = false {
+        didSet {
+            if isClosed {
+                closedIndicator.backgroundColor = UIColor.systemRed.withAlphaComponent(0.5)
+            } else {
+                closedIndicator.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.5)
+            }
+        }
+    }
     var hasFavorited: Bool! = false
+    var mapItem: MKMapItem? {
+        didSet {
+            configureCellLabel()
+        }
+    }
     
     //MARK: - Lifecycle
     
@@ -82,7 +100,9 @@ class MapCell: UITableViewCell {
     //MARK: - Selectors
     
     @objc func handleGo() {
-        print("Handle go here...")
+        if let mapItem = mapItem {
+            delegate?.getDirections(forMapItem: mapItem)
+        }
     }
     
     @objc func handleFavorite() {
@@ -96,6 +116,23 @@ class MapCell: UITableViewCell {
     }
     
     //MARK: - Helpers
+    
+    func animateButtonIn() {
+        goButton.transform = CGAffineTransform(scaleX: 0.25, y: 0.25)
+        UIView.animate(withDuration: 0.9, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .curveEaseInOut) {
+            self.goButton.transform = .identity
+            self.goButton.alpha = 1
+            self.favoriteButton.alpha = 1
+        }
+    }
+    
+    func removeButton() {
+        self.goButton.alpha = 0
+    }
+    
+    private func configureCellLabel() {
+        restaurantLabel.text = mapItem?.name
+    }
     
     private func configureCellUI() {
         selectionStyle = .none
@@ -119,18 +156,11 @@ class MapCell: UITableViewCell {
         closedIndicator.anchor(trailing: priceLabel.leadingAnchor, paddingTrailing: 24)
         
         addSubview(restaurantLabel)
-        restaurantLabel.text = name
         restaurantLabel.centerY(inView: self)
         restaurantLabel.anchor(leading: leadingAnchor,
                                trailing: closedIndicator.leadingAnchor,
                                paddingLeading: 8,
                                paddingTrailing: 8)
-        
-        
-        
-        
-        
-        
     }
     
 }
