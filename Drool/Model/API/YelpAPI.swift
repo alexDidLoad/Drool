@@ -7,7 +7,8 @@
 
 import UIKit
 
-let apiKey = "EuJUR75BOMjHAH5s4tzKpuioI5pEOf2VIYrNA4byGfWKwda3uh9Ouzwx2Q_XZj48ygDUodrZpHBCcZluPwSAAcn0bNAqDjhdazRcfdl2XeCA7ul07AkJyQDKDI__X3Yx"
+
+let apiKey = "nWw_wNDWE2ePm7iYF7x6ovwGfZrOeL_Rxf1IKqRbm66cF2Og6D-vhMYOrqgCMS_DajR0eGwEetArAKQ6UTtcMnDOXoS1s96TIFUg4sV07QRaQBJYT3l_pNTUJR0BYHYx"
 
 extension MapVC {
     
@@ -100,8 +101,13 @@ extension MapVC {
                     restaurant.price = business.value(forKey: "price") as? String
                     restaurant.is_closed = business.value(forKey: "is_closed") as? Bool
                     restaurant.distance = business.value(forKey: "distance") as? Double
-                    let address = business.value(forKey: "address1") as? [String]
+                    let address = business.value(forKey: "location.address1") as? [String]
                     restaurant.address = address?.joined(separator: "\n")
+                    
+                    let latitude = (business["coordinates"] as? [String: Any])?["latitude"] as? Double
+                    let longitude = (business["coordinates"] as? [String: Any])?["longitude"] as? Double
+                    restaurant.latitude = latitude
+                    restaurant.longitude = longitude
                     
                     restaurantList.append(restaurant)
                 }

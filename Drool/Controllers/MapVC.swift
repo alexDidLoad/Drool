@@ -48,17 +48,20 @@ class MapVC: UIViewController {
     //MARK: - Properties
     
     
-    var phoneNumber: [String]! {
+    var restaurantNumber: [String]! {
         didSet {
-            phoneNumber.forEach { (number) in
+            restaurantNumber.forEach { (number) in
                 self.fetchBusiness(withPhoneNumber: number) { (response, error) in
                     if let response = response {
                         response.forEach({self.restaurants.append($0)})
+                    } else if let error = error {
+                        print(error.localizedDescription)
                     }
                 }
             }
         }
     }
+    
     var restaurants: [Restaurant] = [] {
         didSet {
             mapSearchView.restaurants = self.restaurants
@@ -69,21 +72,18 @@ class MapVC: UIViewController {
             centerOnUserLocation(shouldLoadAnnotations: true)
         }
     }
-    
+    private var mapAnnotation: MKPointAnnotation!
     private lazy var locationManager = HomeVC().locationManager
     
     //MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         configureUI()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         mapSearchView.expansionState = .NotExpanded
     }
     
@@ -91,7 +91,6 @@ class MapVC: UIViewController {
     
     @objc func handleCenterLocation() {
         centerOnUserLocation(shouldLoadAnnotations: false)
-        print(restaurants)
     }
     
     @objc func handleExit() {
@@ -139,10 +138,10 @@ class MapVC: UIViewController {
     
     private func centerOnUserLocation(shouldLoadAnnotations: Bool) {
         guard let coordinate = locationManager.location?.coordinate else { return }
-        let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 3000, longitudinalMeters: 3000)
+        let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
         
         if shouldLoadAnnotations {
-            loadAnnotations(withSearchQuery: foodCategory)
+            loadRestaurantNumbers(withSearchQuery: foodCategory)
         }
         mapView.setRegion(region, animated: true)
         mapSearchView.expansionState = .NotExpanded
@@ -194,32 +193,22 @@ class MapVC: UIViewController {
         }
     }
     
-    private func loadAnnotations(withSearchQuery query: String) {
-        guard let coordinate = locationManager.location?.coordinate else { return }
-        let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 100, longitudinalMeters: 100)
+    private func loadRestaurantNumbers(withSearchQuery query: String) {
+        guard let userLocation = locationManager.location?.coordinate else { return }
+        let region = MKCoordinateRegion(center: userLocation, latitudinalMeters: 100, longitudinalMeters: 100)
+        var phoneNumbers = [String]()
         
-        ///fetch data from yelp
-        
-        searchBy(naturalLanguageQuery: query, region: region, coordinates: coordinate) { (response, error) in
+        searchBy(naturalLanguageQuery: query, region: region, coordinates: userLocation) { (response, error) in
             guard let response = response else { return }
             response.mapItems.forEach({ mapItem in
-                
-                let annotation = MKPointAnnotation()
-                annotation.title = mapItem.name
-                annotation.coordinate = mapItem.placemark.coordinate
-                self.mapView.addAnnotation(annotation)
-                
-                
-                var phoneArray = [String]()
                 let deleteCharacters: Set<Character> = ["(", ")", "-"]
-                var mappedNumber = mapItem.phoneNumber?.replacingOccurrences(of: " ", with: "")
-                mappedNumber?.removeAll(where: {deleteCharacters.contains($0)})
-                guard let number = mappedNumber else { return }
-                phoneArray.append(number)
-                self.phoneNumber = phoneArray
+                var mapNumber = mapItem.phoneNumber?.replacingOccurrences(of: " ", with: "")
+                mapNumber?.removeAll(where: {deleteCharacters.contains($0)})
+                guard let number = mapNumber else { return }
+                phoneNumbers.append(number)
             })
             DispatchQueue.main.async {
-                self.mapSearchView.searchResults = response.mapItems
+                self.restaurantNumber = phoneNumbers
             }
         }
     }
@@ -234,6 +223,34 @@ extension MapVC: MKMapViewDelegate {
 //MARK: - MapSearchViewDelegate
 
 extension MapVC: MapSearchViewDelegate {
+    
+    func addAnnotations(forRestaurants: [Restaurant]) {
+        for restaurant in restaurants {
+            mapAnnotation = MKPointAnnotation()
+            mapAnnotation.title = restaurant.name
+            mapAnnotation.coordinate.latitude = restaurant.latitude!
+            mapAnnotation.coordinate.longitude = restaurant.longitude!
+            self.mapView.addAnnotation(mapAnnotation)
+        }
+    }
+    
+    func refresh() {
+        
+        let allAnnotations = self.mapView.annotations
+        restaurants.removeAll()
+        self.mapView.removeAnnotations(allAnnotations)
+        
+        restaurantNumber.forEach { (number) in
+            self.fetchBusiness(withPhoneNumber: number) { (response, error) in
+                if let response = response {
+                    response.forEach({self.restaurants.append($0)})
+                } else if let error = error {
+                    print(error.localizedDescription)
+                }
+            }
+        }
+    }
+    
     func didSelectAnnotation(withMapItem mapItem: MKMapItem) {
         
         mapView.annotations.forEach { annotation in

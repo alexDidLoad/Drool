@@ -16,5 +16,7 @@ struct Restaurant {
     var is_closed       : Bool?
     var distance        : Double?
     var address         : String?
+    var latitude        : Double?
+    var longitude       : Double?
     
 }

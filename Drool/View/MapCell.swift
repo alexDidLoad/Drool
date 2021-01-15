@@ -40,7 +40,7 @@ class MapCell: UITableViewCell {
     private let priceLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.font = UIFont.boldSystemFont(ofSize: 16)
         return label
     }()
     
@@ -64,11 +64,6 @@ class MapCell: UITableViewCell {
 
     var delegate: MapCellDelegate?
     
-    var price: String! = "$$$" {
-        didSet {
-            priceLabel.text = price
-        }
-    }
     var isClosed: Bool! = false {
         didSet {
             if isClosed {
@@ -79,7 +74,13 @@ class MapCell: UITableViewCell {
         }
     }
     var hasFavorited: Bool! = false
-    var mapItem: MKMapItem? {
+//    var mapItem: MKMapItem? {
+//        didSet {
+//            configureCellLabel()
+//        }
+//    }
+    
+    var restaurant: Restaurant? {
         didSet {
             configureCellLabel()
         }
@@ -100,9 +101,10 @@ class MapCell: UITableViewCell {
     //MARK: - Selectors
     
     @objc func handleGo() {
-        if let mapItem = mapItem {
-            delegate?.getDirections(forMapItem: mapItem)
-        }
+//        if let mapItem = mapItem {
+//            delegate?.getDirections(forMapItem: mapItem)
+//        }
+        
     }
     
     @objc func handleFavorite() {
@@ -131,7 +133,9 @@ class MapCell: UITableViewCell {
     }
     
     private func configureCellLabel() {
-        restaurantLabel.text = mapItem?.name
+        restaurantLabel.text = restaurant?.name ?? "Not Available"
+        isClosed = restaurant?.is_closed ?? false
+        priceLabel.text = restaurant?.price ?? "-"
     }
     
     private func configureCellUI() {
@@ -146,14 +150,14 @@ class MapCell: UITableViewCell {
         favoriteButton.centerY(inView: self)
         favoriteButton.anchor(trailing: goButton.leadingAnchor, paddingTrailing: 32)
         
+        priceLabel.setWidth(width: 50)
         addSubview(priceLabel)
-        priceLabel.text = price
         priceLabel.centerY(inView: self)
-        priceLabel.anchor(trailing: favoriteButton.leadingAnchor, paddingTrailing: 24)
+        priceLabel.anchor(trailing: favoriteButton.leadingAnchor, paddingTrailing: 6)
         
         addSubview(closedIndicator)
         closedIndicator.centerY(inView: self)
-        closedIndicator.anchor(trailing: priceLabel.leadingAnchor, paddingTrailing: 24)
+        closedIndicator.centerX(inView: self, constant: -10)
         
         addSubview(restaurantLabel)
         restaurantLabel.centerY(inView: self)

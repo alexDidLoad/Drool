@@ -114,7 +114,6 @@
 			isa = PBXGroup;
 			children = (
 				11CC54B725AA711000ACA40A /* Extensions.swift */,
-				11CC551C25B0001400ACA40A /* YelpAPI.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -136,7 +135,7 @@
 				11CC54D025ABE20900ACA40A /* Food.swift */,
 				11CC54D525ABEF2900ACA40A /* CategoryCellDataSource.swift */,
 				11CC54D825ABEF3000ACA40A /* FoodCellDataSource.swift */,
-				11CC54F025AFC6B200ACA40A /* Restaurant.swift */,
+				11CC551F25B0E8A000ACA40A /* API */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -147,6 +146,15 @@
 				11CC54BD25AA785000ACA40A /* LocationRequestController.swift */,
 			);
 			path = LocationAuth;
+			sourceTree = "<group>";
+		};
+		11CC551F25B0E8A000ACA40A /* API */ = {
+			isa = PBXGroup;
+			children = (
+				11CC54F025AFC6B200ACA40A /* Restaurant.swift */,
+				11CC551C25B0001400ACA40A /* YelpAPI.swift */,
+			);
+			path = API;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
