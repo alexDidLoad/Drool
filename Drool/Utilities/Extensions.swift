@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MapKit
 
 //MARK: - UIView
 
@@ -13,6 +14,10 @@ extension UIView {
     
     func addConstraintsToFillView(view: UIView) {
         self.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, paddingTop: 0, paddingLeading: 0, paddingBottom: 0, paddingTrailing: 0)
+    }
+    
+    func fillViewWithPadding(view: UIView, paddingTop top: CGFloat, paddingLeading lead: CGFloat, paddingBottom bottom: CGFloat, paddingTrailing trailing: CGFloat) {
+        self.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, paddingTop: top, paddingLeading: lead, paddingBottom: bottom, paddingTrailing: trailing)
     }
     
     func anchor(top: NSLayoutYAxisAnchor? = nil,
@@ -126,6 +131,14 @@ extension UIViewController {
         UIView.animate(withDuration: 0.3, delay: 0.2, usingSpringWithDamping: 1, initialSpringVelocity: .zero, options: .curveEaseInOut) {
             selectedCell?.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
         }
+    }
+    
+    func getMapItemPhoneNumber(_ item: MKMapItem) -> String {
+        let unwantedChars: Set<Character> = ["(", ")", "-"]
+        var mapNumber = item.phoneNumber?.replacingOccurrences(of: " ", with: "")
+        mapNumber?.removeAll(where: {unwantedChars.contains($0)})
+        guard let newNumber = mapNumber else { return "" }
+        return newNumber
     }
     
 }

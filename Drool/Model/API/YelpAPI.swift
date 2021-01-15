@@ -59,7 +59,6 @@ extension MapVC {
                     
                     restaurantList.append(restaurant)
                 }
-                
                 completionHandler(restaurantList, nil)
             } catch {
                 print("DEBUG: Error in continuing URLSession/Datatask")
@@ -71,9 +70,10 @@ extension MapVC {
     
     func fetchBusiness(withPhoneNumber phone: String, completionHandler: @escaping ([Restaurant]?, Error?) -> Void) {
         
-        let url = URL(string: "https://api.yelp.com/v3/businesses/search/phone?phone=\(phone)")
+        guard let url = URL(string: "https://api.yelp.com/v3/businesses/search/phone?phone=\(phone)") else { return }
         
-        var request = URLRequest(url: url!)
+        
+        var request = URLRequest(url: url)
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.httpMethod = "GET"
         
@@ -101,14 +101,15 @@ extension MapVC {
                     restaurant.price = business.value(forKey: "price") as? String
                     restaurant.is_closed = business.value(forKey: "is_closed") as? Bool
                     restaurant.distance = business.value(forKey: "distance") as? Double
-                    let address = business.value(forKey: "location.address1") as? [String]
-                    restaurant.address = address?.joined(separator: "\n")
+                    restaurant.url = business.value(forKey: "url") as? String
                     
+                    let address = (business["location"] as? [String: Any])?["address1"] as? String
+                    restaurant.address = address
                     let latitude = (business["coordinates"] as? [String: Any])?["latitude"] as? Double
                     let longitude = (business["coordinates"] as? [String: Any])?["longitude"] as? Double
                     restaurant.latitude = latitude
                     restaurant.longitude = longitude
-                    
+                   
                     restaurantList.append(restaurant)
                 }
                 
@@ -117,17 +118,5 @@ extension MapVC {
                 print("DEBUG: Error in continuing URLSession/Datatask")
             }
         }.resume()
-        
-        
     }
-    
-    
-    
-    
-        
-        
-        
-    
-    
-    
 }

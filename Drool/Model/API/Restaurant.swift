@@ -18,5 +18,5 @@ struct Restaurant {
     var address         : String?
     var latitude        : Double?
     var longitude       : Double?
-    
+    var url             : String?
 }

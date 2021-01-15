@@ -35,7 +35,7 @@ class MapSearchView: UIView {
         return refresh
     }()
     
-    var tableView: UITableView!
+    private var mapTableView: UITableView!
     
     //MARK: - Properties
     
@@ -47,10 +47,12 @@ class MapSearchView: UIView {
     var restaurants: [Restaurant]! {
         didSet {
             DispatchQueue.main.async {
-                self.tableView.reloadData()
+                self.mapTableView.reloadData()
             }
         }
     }
+    
+    private var hasRefreshed: Bool = false
     var mapController: MapVC?
     var expansionState: ExpansionState!
     var delegate: MapSearchViewDelegate?
@@ -59,9 +61,7 @@ class MapSearchView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         configureUI()
-        expansionState = .NotExpanded
     }
     
     required init?(coder: NSCoder) {
@@ -71,26 +71,23 @@ class MapSearchView: UIView {
     //MARK: - Selectors
     
     @objc func handleSwipeGesture(sender: UISwipeGestureRecognizer) {
-        if sender.direction == .up {
-            if expansionState == .NotExpanded {
-                animateSearchView(targetPosition: self.frame.origin.y - 225) { (_) in
-                    self.expansionState = .Expanded
-                }
+        if sender.direction == .up && expansionState == .NotExpanded {
+            animateSearchView(targetPosition: self.frame.origin.y - 225) { (_) in
+                self.expansionState = .Expanded
             }
-        } else if sender.direction == .down {
-            if expansionState == .Expanded {
-                animateSearchView(targetPosition: self.frame.origin.y + 225) { (_) in
-                    self.expansionState = .NotExpanded
-                }
+        } else if sender.direction == .down && expansionState == .Expanded {
+            animateSearchView(targetPosition: self.frame.origin.y + 225) { (_) in
+                self.expansionState = .NotExpanded
             }
         }
     }
     
     @objc func handlePullRefresh() {
+        hasRefreshed = true
         restaurants?.removeAll()
         delegate?.refresh()
         DispatchQueue.main.async {
-            self.tableView.reloadData()
+            self.mapTableView.reloadData()
             self.refreshControl.endRefreshing()
         }
     }
@@ -111,24 +108,23 @@ class MapSearchView: UIView {
         
         configureTableView()
         configureGestureRecognizer()
-        
     }
     
     private func configureTableView() {
-        tableView = UITableView()
-        tableView.rowHeight = 72
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(MapCell.self, forCellReuseIdentifier: reuseIdentifier)
+        mapTableView = UITableView()
+        mapTableView.rowHeight = 72
+        mapTableView.delegate = self
+        mapTableView.dataSource = self
+        mapTableView.register(MapCell.self, forCellReuseIdentifier: reuseIdentifier)
         
-        addSubview(tableView)
-        tableView.setHeight(height: 275)
-        tableView.anchor(top: indicatorView.bottomAnchor,
+        addSubview(mapTableView)
+        mapTableView.setHeight(height: 275)
+        mapTableView.anchor(top: indicatorView.bottomAnchor,
                          leading: leadingAnchor,
                          trailing: trailingAnchor,
                          paddingTop: 8)
         
-        tableView.addSubview(refreshControl)
+        mapTableView.addSubview(refreshControl)
     }
     
     private func configureGestureRecognizer() {
@@ -149,12 +145,12 @@ class MapSearchView: UIView {
         }, completion: completion)
     }
     
-    private func didSelectMapItem(withMapItems items: [MKMapItem], selectedMapItem: MKMapItem, atIndexPath indexPath: IndexPath) -> [MKMapItem] {
-        var items = items
-        items.remove(at: indexPath.row)
-        items.insert(selectedMapItem, at: 0)
-        items.removeSubrange(1..<items.count)
-        return items
+    private func didSelectRestaurant(_ restaurants: [Restaurant], selectedRestaurant: Restaurant, atIndexPath indexPath: IndexPath) -> [Restaurant] {
+        var restaurants = restaurants
+        restaurants.remove(at: indexPath.row)
+        restaurants.insert(selectedRestaurant, at: 0)
+        restaurants.removeSubrange(1..<restaurants.count)
+        return restaurants
     }
 }
 
@@ -164,43 +160,35 @@ extension MapSearchView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let restaurants = restaurants else { return 0 }
         delegate?.addAnnotations(forRestaurants: restaurants)
-        
         return restaurants.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! MapCell
-        
         if let mapController = mapController {
             cell.delegate = mapController
         }
         if let restaurants = restaurants {
             cell.restaurant = restaurants[indexPath.row]
         }
-        
+        if hasRefreshed {
+            cell.removeButton()
+            hasRefreshed = false
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let restaurants = restaurants else { return }
-        
-//        let selectedMapItem = searchResults[indexPath.row]
-        
         let selectedMapItem = MKMapItem()
+        let selectedRestaurant = restaurants[indexPath.row]
+        selectedMapItem.name = selectedRestaurant.name
         
-        let restaurant = restaurants[indexPath.row]
-        
-        
-        if selectedMapItem.name == restaurant.name {
-            delegate?.didSelectAnnotation(withMapItem: selectedMapItem)
-        } 
-        
-//        self.searchResults = didSelectMapItem(withMapItems: searchResults, selectedMapItem: selectedMapItem, atIndexPath: indexPath)
+        delegate?.didSelectAnnotation(withMapItem: selectedMapItem)
+        self.restaurants = didSelectRestaurant(restaurants, selectedRestaurant: selectedRestaurant, atIndexPath: indexPath)
         
         let firstIndexPath = IndexPath(row: 0, section: 0)
         let cell = tableView.cellForRow(at: firstIndexPath) as? MapCell
-        cell?.animateButtonIn()
         
+        cell?.animateButtonIn()
     }
-    
 }

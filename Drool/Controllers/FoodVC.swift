@@ -29,7 +29,6 @@ class FoodVC: UIViewController {
         super.viewDidLoad()
         configureUI()
     }
-    
     //MARK: - Helpers
     
     private func configureUI() {
@@ -50,7 +49,6 @@ class FoodVC: UIViewController {
         foodTableView.addConstraintsToFillView(view: view)
     }
 }
-
 //MARK: - UITableViewDelegate Methods
 
 extension FoodVC: UITableViewDelegate {
@@ -62,5 +60,4 @@ extension FoodVC: UITableViewDelegate {
        
         animateTableView(tableView, atIndexPath: indexPath, presentingVC: mapController)
     }
-    
 }

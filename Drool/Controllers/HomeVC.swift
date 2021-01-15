@@ -17,8 +17,6 @@ class HomeVC: UIViewController {
     //MARK: - UIComponents
     
     private var categoryTableView: UITableView!
-    private var categoryTableViewTrailing: NSLayoutConstraint!
-    private var categoryTableViewCenterX: NSLayoutConstraint!
     
     //MARK: - Properties
     
@@ -32,7 +30,6 @@ class HomeVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         configureUI()
         enableLocationServices()
     }
@@ -45,7 +42,6 @@ class HomeVC: UIViewController {
     }
     
     private func configureCategoryTableView() {
-        
         categoryTableView = UITableView()
         categoryTableView.backgroundColor = UIColor.white.withAlphaComponent(0.1)
         categoryTableView.rowHeight = 210
@@ -55,7 +51,6 @@ class HomeVC: UIViewController {
         categoryTableView.register(CategoryCell.self, forCellReuseIdentifier: categoryReuseIdentifier)
         
         view.addSubview(categoryTableView)
-        categoryTableView.setWidth(width: view.frame.width)
         categoryTableView.addConstraintsToFillView(view: view)
     }
 }
@@ -80,7 +75,6 @@ extension HomeVC: CLLocationManagerDelegate {
     func enableLocationServices() {
         let locationVC = LocationRequestController()
         locationVC.modalPresentationStyle = .fullScreen
-        
         locationManager.delegate = self
         
         switch locationManager.authorizationStatus {

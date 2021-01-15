@@ -42,36 +42,14 @@ class MapVC: UIViewController {
     }()
     
     var mapSearchView = MapSearchView()
-   
     private var mapView = MKMapView()
     
     //MARK: - Properties
     
+    var restaurantNumber: [String]! { didSet { fetchDataFromYelp() } }
+    var restaurants: [Restaurant] = [] { didSet { mapSearchView.restaurants = self.restaurants } }
+    var foodCategory: String! { didSet { centerOnUserLocation(shouldLoadAnnotations: true) } }
     
-    var restaurantNumber: [String]! {
-        didSet {
-            restaurantNumber.forEach { (number) in
-                self.fetchBusiness(withPhoneNumber: number) { (response, error) in
-                    if let response = response {
-                        response.forEach({self.restaurants.append($0)})
-                    } else if let error = error {
-                        print(error.localizedDescription)
-                    }
-                }
-            }
-        }
-    }
-    
-    var restaurants: [Restaurant] = [] {
-        didSet {
-            mapSearchView.restaurants = self.restaurants
-        }
-    }
-    var foodCategory: String! {
-        didSet {
-            centerOnUserLocation(shouldLoadAnnotations: true)
-        }
-    }
     private var mapAnnotation: MKPointAnnotation!
     private lazy var locationManager = HomeVC().locationManager
     
@@ -81,12 +59,6 @@ class MapVC: UIViewController {
         super.viewDidLoad()
         configureUI()
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        mapSearchView.expansionState = .NotExpanded
-    }
-    
     //MARK: - Selectors
     
     @objc func handleCenterLocation() {
@@ -96,7 +68,6 @@ class MapVC: UIViewController {
     @objc func handleExit() {
         self.dismiss(animated: true, completion: nil)
     }
-    
     //MARK: - Helpers
     
     private func configureUI() {
@@ -117,6 +88,7 @@ class MapVC: UIViewController {
         
         mapSearchView.delegate = self
         mapSearchView.mapController = self
+        mapSearchView.expansionState = .NotExpanded
         view.addSubview(mapSearchView)
         mapSearchView.anchor(leading: view.leadingAnchor,
                              bottom: view.bottomAnchor,
@@ -129,16 +101,26 @@ class MapVC: UIViewController {
         mapView.delegate = self
         mapView.showsUserLocation = true
         mapView.userTrackingMode = .follow
-        
         view.addSubview(mapView)
         mapView.addConstraintsToFillView(view: view)
     }
     
+    private func fetchDataFromYelp() {
+        restaurantNumber.forEach { (number) in
+            self.fetchBusiness(withPhoneNumber: number) { (response, error) in
+                if let response = response {
+                    response.forEach({self.restaurants.append($0)})
+                } else if let error = error {
+                    print(error.localizedDescription)
+                }
+            }
+        }
+    }
     //MARK: - MapKit Helper Methods
     
     private func centerOnUserLocation(shouldLoadAnnotations: Bool) {
         guard let coordinate = locationManager.location?.coordinate else { return }
-        let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
+        let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 1500, longitudinalMeters: 1500)
         
         if shouldLoadAnnotations {
             loadRestaurantNumbers(withSearchQuery: foodCategory)
@@ -201,11 +183,7 @@ class MapVC: UIViewController {
         searchBy(naturalLanguageQuery: query, region: region, coordinates: userLocation) { (response, error) in
             guard let response = response else { return }
             response.mapItems.forEach({ mapItem in
-                let deleteCharacters: Set<Character> = ["(", ")", "-"]
-                var mapNumber = mapItem.phoneNumber?.replacingOccurrences(of: " ", with: "")
-                mapNumber?.removeAll(where: {deleteCharacters.contains($0)})
-                guard let number = mapNumber else { return }
-                phoneNumbers.append(number)
+                phoneNumbers.append(self.getMapItemPhoneNumber(mapItem))
             })
             DispatchQueue.main.async {
                 self.restaurantNumber = phoneNumbers
@@ -213,7 +191,6 @@ class MapVC: UIViewController {
         }
     }
 }
-
 //MARK: - MapViewDelegate
 
 extension MapVC: MKMapViewDelegate {
@@ -224,7 +201,7 @@ extension MapVC: MKMapViewDelegate {
 
 extension MapVC: MapSearchViewDelegate {
     
-    func addAnnotations(forRestaurants: [Restaurant]) {
+    func addAnnotations(forRestaurants restaurants: [Restaurant]) {
         for restaurant in restaurants {
             mapAnnotation = MKPointAnnotation()
             mapAnnotation.title = restaurant.name
@@ -235,33 +212,21 @@ extension MapVC: MapSearchViewDelegate {
     }
     
     func refresh() {
-        
         let allAnnotations = self.mapView.annotations
         restaurants.removeAll()
         self.mapView.removeAnnotations(allAnnotations)
-        
-        restaurantNumber.forEach { (number) in
-            self.fetchBusiness(withPhoneNumber: number) { (response, error) in
-                if let response = response {
-                    response.forEach({self.restaurants.append($0)})
-                } else if let error = error {
-                    print(error.localizedDescription)
-                }
-            }
-        }
+        fetchDataFromYelp()
     }
     
     func didSelectAnnotation(withMapItem mapItem: MKMapItem) {
-        
         mapView.annotations.forEach { annotation in
-            if annotation.title == mapItem.name {
+            if annotation.title != mapItem.name {
+                self.mapView.removeAnnotation(annotation)
+            } else {
                 self.mapView.selectAnnotation(annotation, animated: true)
                 self.zoomToFit(selectedAnnotation: annotation)
-            } else if annotation.title != mapItem.name {
-                self.mapView.removeAnnotation(annotation)
             }
         }
-        
     }
 }
 

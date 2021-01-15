@@ -61,8 +61,6 @@ class MapCell: UITableViewCell {
     }()
     
     //MARK: - Properties
-
-    var delegate: MapCellDelegate?
     
     var isClosed: Bool! = false {
         didSet {
@@ -73,18 +71,10 @@ class MapCell: UITableViewCell {
             }
         }
     }
-    var hasFavorited: Bool! = false
-//    var mapItem: MKMapItem? {
-//        didSet {
-//            configureCellLabel()
-//        }
-//    }
     
-    var restaurant: Restaurant? {
-        didSet {
-            configureCellLabel()
-        }
-    }
+    var delegate: MapCellDelegate?
+    var restaurant: Restaurant? { didSet { configureCellLabel() } }
+    var hasFavorited: Bool! = false
     
     //MARK: - Lifecycle
     
@@ -101,10 +91,14 @@ class MapCell: UITableViewCell {
     //MARK: - Selectors
     
     @objc func handleGo() {
-//        if let mapItem = mapItem {
-//            delegate?.getDirections(forMapItem: mapItem)
-//        }
+        guard let latitude = restaurant?.latitude else { return }
+        guard let longitude = restaurant?.longitude else { return }
+        let coordinates = CLLocationCoordinate2DMake(latitude, longitude)
+        let placemark = MKPlacemark(coordinate: coordinates)
+        let mapItem = MKMapItem(placemark: placemark)
+        mapItem.name = restaurant?.name
         
+        delegate?.getDirections(forMapItem: mapItem)
     }
     
     @objc func handleFavorite() {

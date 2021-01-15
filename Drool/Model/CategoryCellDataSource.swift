@@ -9,6 +9,8 @@ import UIKit
 
 class CategoryCellDataSource: NSObject, UITableViewDataSource {
     
+    //MARK: - UITableViewDataSource Methods
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return categoryImageNames.count
     }

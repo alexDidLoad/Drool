@@ -27,6 +27,8 @@
 		11CC54EC25AE183700ACA40A /* MapCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC54EB25AE183700ACA40A /* MapCell.swift */; };
 		11CC54F125AFC6B200ACA40A /* Restaurant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC54F025AFC6B200ACA40A /* Restaurant.swift */; };
 		11CC551D25B0001400ACA40A /* YelpAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC551C25B0001400ACA40A /* YelpAPI.swift */; };
+		11CC552E25B2324D00ACA40A /* FavoritesCellDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC552D25B2324D00ACA40A /* FavoritesCellDataSource.swift */; };
+		11CC553225B2338700ACA40A /* FavoritesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC553125B2338700ACA40A /* FavoritesCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +54,8 @@
 		11CC54EB25AE183700ACA40A /* MapCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCell.swift; sourceTree = "<group>"; };
 		11CC54F025AFC6B200ACA40A /* Restaurant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restaurant.swift; sourceTree = "<group>"; };
 		11CC551C25B0001400ACA40A /* YelpAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YelpAPI.swift; sourceTree = "<group>"; };
+		11CC552D25B2324D00ACA40A /* FavoritesCellDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesCellDataSource.swift; sourceTree = "<group>"; };
+		11CC553125B2338700ACA40A /* FavoritesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,10 +125,8 @@
 		11CC54C725AAB15C00ACA40A /* View */ = {
 			isa = PBXGroup;
 			children = (
-				11CC54C425AAB15100ACA40A /* CategoryCell.swift */,
-				11CC54C925ABC9A600ACA40A /* FoodCell.swift */,
+				11CC552A25B22D4C00ACA40A /* CustomCells */,
 				11CC54E625AD74FB00ACA40A /* MapSearchView.swift */,
-				11CC54EB25AE183700ACA40A /* MapCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -135,6 +137,7 @@
 				11CC54D025ABE20900ACA40A /* Food.swift */,
 				11CC54D525ABEF2900ACA40A /* CategoryCellDataSource.swift */,
 				11CC54D825ABEF3000ACA40A /* FoodCellDataSource.swift */,
+				11CC552D25B2324D00ACA40A /* FavoritesCellDataSource.swift */,
 				11CC551F25B0E8A000ACA40A /* API */,
 			);
 			path = Model;
@@ -155,6 +158,17 @@
 				11CC551C25B0001400ACA40A /* YelpAPI.swift */,
 			);
 			path = API;
+			sourceTree = "<group>";
+		};
+		11CC552A25B22D4C00ACA40A /* CustomCells */ = {
+			isa = PBXGroup;
+			children = (
+				11CC54C425AAB15100ACA40A /* CategoryCell.swift */,
+				11CC54C925ABC9A600ACA40A /* FoodCell.swift */,
+				11CC54EB25AE183700ACA40A /* MapCell.swift */,
+				11CC553125B2338700ACA40A /* FavoritesCell.swift */,
+			);
+			path = CustomCells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -235,9 +249,11 @@
 				11CC54EC25AE183700ACA40A /* MapCell.swift in Sources */,
 				11CC54D125ABE20900ACA40A /* Food.swift in Sources */,
 				11CC549825AA5ECF00ACA40A /* AppDelegate.swift in Sources */,
+				11CC552E25B2324D00ACA40A /* FavoritesCellDataSource.swift in Sources */,
 				11CC54E325AD716A00ACA40A /* MapVC.swift in Sources */,
 				11CC54A225AA5ECF00ACA40A /* Drool.xcdatamodeld in Sources */,
 				11CC54E725AD74FB00ACA40A /* MapSearchView.swift in Sources */,
+				11CC553225B2338700ACA40A /* FavoritesCell.swift in Sources */,
 				11CC551D25B0001400ACA40A /* YelpAPI.swift in Sources */,
 				11CC54CA25ABC9A600ACA40A /* FoodCell.swift in Sources */,
 				11CC54D625ABEF2900ACA40A /* CategoryCellDataSource.swift in Sources */,
