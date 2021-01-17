@@ -95,7 +95,7 @@ class FavoritesCell: UITableViewCell {
     
     private func configureUI() {
         selectionStyle = .none
-        backgroundColor = UIColor.blue.withAlphaComponent(0.5)
+        backgroundColor = UIColor.black.withAlphaComponent(0.2)
         
         addSubview(containerView)
         containerView.fillViewWithPadding(view: self,

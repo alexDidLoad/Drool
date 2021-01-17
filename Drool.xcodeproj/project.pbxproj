@@ -29,6 +29,7 @@
 		11CC551D25B0001400ACA40A /* YelpAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC551C25B0001400ACA40A /* YelpAPI.swift */; };
 		11CC552E25B2324D00ACA40A /* FavoritesCellDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC552D25B2324D00ACA40A /* FavoritesCellDataSource.swift */; };
 		11CC553225B2338700ACA40A /* FavoritesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC553125B2338700ACA40A /* FavoritesCell.swift */; };
+		11CC553525B3C4B500ACA40A /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC553425B3C4B500ACA40A /* Keys.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +57,7 @@
 		11CC551C25B0001400ACA40A /* YelpAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YelpAPI.swift; sourceTree = "<group>"; };
 		11CC552D25B2324D00ACA40A /* FavoritesCellDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesCellDataSource.swift; sourceTree = "<group>"; };
 		11CC553125B2338700ACA40A /* FavoritesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesCell.swift; sourceTree = "<group>"; };
+		11CC553425B3C4B500ACA40A /* Keys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -156,6 +158,7 @@
 			children = (
 				11CC54F025AFC6B200ACA40A /* Restaurant.swift */,
 				11CC551C25B0001400ACA40A /* YelpAPI.swift */,
+				11CC553425B3C4B500ACA40A /* Keys.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -244,6 +247,7 @@
 				11CC54B825AA711000ACA40A /* Extensions.swift in Sources */,
 				11CC54D925ABEF3000ACA40A /* FoodCellDataSource.swift in Sources */,
 				11CC549C25AA5ECF00ACA40A /* HomeVC.swift in Sources */,
+				11CC553525B3C4B500ACA40A /* Keys.swift in Sources */,
 				11CC54C525AAB15100ACA40A /* CategoryCell.swift in Sources */,
 				11CC54BE25AA785000ACA40A /* LocationRequestController.swift in Sources */,
 				11CC54EC25AE183700ACA40A /* MapCell.swift in Sources */,

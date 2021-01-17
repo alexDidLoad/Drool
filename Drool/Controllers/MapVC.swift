@@ -46,7 +46,7 @@ class MapVC: UIViewController {
     
     //MARK: - Properties
     
-    var restaurantNumber: [String]! { didSet { fetchDataFromYelp() } }
+    var restaurantNumber: [String]! { didSet { fetchRestaurants() } }
     var restaurants: [Restaurant] = [] { didSet { mapSearchView.restaurants = self.restaurants } }
     var foodCategory: String! { didSet { centerOnUserLocation(shouldLoadAnnotations: true) } }
     
@@ -105,15 +105,9 @@ class MapVC: UIViewController {
         mapView.addConstraintsToFillView(view: view)
     }
     
-    private func fetchDataFromYelp() {
+    private func fetchRestaurants() {
         restaurantNumber.forEach { (number) in
-            self.fetchBusiness(withPhoneNumber: number) { (response, error) in
-                if let response = response {
-                    response.forEach({self.restaurants.append($0)})
-                } else if let error = error {
-                    print(error.localizedDescription)
-                }
-            }
+            fetchYelpData(withPhoneNumber: number)
         }
     }
     //MARK: - MapKit Helper Methods
@@ -215,7 +209,7 @@ extension MapVC: MapSearchViewDelegate {
         let allAnnotations = self.mapView.annotations
         restaurants.removeAll()
         self.mapView.removeAnnotations(allAnnotations)
-        fetchDataFromYelp()
+        fetchRestaurants()
     }
     
     func didSelectAnnotation(withMapItem mapItem: MKMapItem) {

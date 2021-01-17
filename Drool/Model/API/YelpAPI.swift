@@ -7,8 +7,7 @@
 
 import UIKit
 
-
-let apiKey = "nWw_wNDWE2ePm7iYF7x6ovwGfZrOeL_Rxf1IKqRbm66cF2Og6D-vhMYOrqgCMS_DajR0eGwEetArAKQ6UTtcMnDOXoS1s96TIFUg4sV07QRaQBJYT3l_pNTUJR0BYHYx"
+let apiKey = myYelpAPIKey
 
 extension MapVC {
     
@@ -20,6 +19,8 @@ extension MapVC {
                        sortBy: String,
                        locale: String,
                        completionHandler: @escaping ([Restaurant]?, Error?) -> Void) {
+        
+        
         
         ///Create URL:
         let baseURL = "https://api.yelp.com/v3/businesses/search?latitude=\(latitude)&longitude=\(longitude)&categories=\(category)&limit=\(limit)&sort_by=\(sortBy)&locale=\(locale)"
@@ -41,7 +42,7 @@ extension MapVC {
                 
                 //Create dictionary and store JSON object
                 guard let resp = json as? NSDictionary else { return }
-    
+                
                 //Accessing each business, setting the properties in Restaurant object and appending the object to empty restaurant array
                 guard let businesses = resp.value(forKey: "businesses") as? [NSDictionary] else { return }
                 var restaurantList: [Restaurant] = []
@@ -68,28 +69,33 @@ extension MapVC {
     
     //MARK: - Yelp Phone Search
     
-    func fetchBusiness(withPhoneNumber phone: String, completionHandler: @escaping ([Restaurant]?, Error?) -> Void) {
+    func fetchYelpData(withPhoneNumber phone: String) {
         
         guard let url = URL(string: "https://api.yelp.com/v3/businesses/search/phone?phone=\(phone)") else { return }
-        
-        
         var request = URLRequest(url: url)
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.httpMethod = "GET"
         
-        URLSession.shared.dataTask(with: request) { (data, response, error) in
+        getData(from: request) { (response, error) in
+            if let error = error {
+                print(error.localizedDescription)
+            } else if let response = response {
+                response.forEach({self.restaurants.append($0)})
+            }
+        }
+    }
+    
+    func getData(from request: URLRequest, completion: @escaping ([Restaurant]?, Error?) -> Void) {
+       
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             
             if let error = error {
-                completionHandler(nil, error)
+                completion(nil, error)
             }
             
             do {
                 let json = try JSONSerialization.jsonObject(with: data!, options: [])
-                
-                //Create dictionary and store JSON object
                 guard let resp = json as? NSDictionary else { return }
-    
-                //Accessing each business, setting the properties in Restaurant object and appending the object to empty restaurant array
                 guard let businesses = resp.value(forKey: "businesses") as? [NSDictionary] else { return }
                 var restaurantList: [Restaurant] = []
                 
@@ -102,6 +108,7 @@ extension MapVC {
                     restaurant.is_closed = business.value(forKey: "is_closed") as? Bool
                     restaurant.distance = business.value(forKey: "distance") as? Double
                     restaurant.url = business.value(forKey: "url") as? String
+                    restaurant.image_url = business.value(forKey: "image_url") as? String
                     
                     let address = (business["location"] as? [String: Any])?["address1"] as? String
                     restaurant.address = address
@@ -109,14 +116,18 @@ extension MapVC {
                     let longitude = (business["coordinates"] as? [String: Any])?["longitude"] as? Double
                     restaurant.latitude = latitude
                     restaurant.longitude = longitude
-                   
+                    
                     restaurantList.append(restaurant)
                 }
-                
-                completionHandler(restaurantList, nil)
+                completion(restaurantList, nil)
             } catch {
-                print("DEBUG: Error in continuing URLSession/Datatask")
+                print("DEBUG: Error in parsing json")
             }
-        }.resume()
+        }
+        task.resume()
     }
+    
 }
+
+
+
