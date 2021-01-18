@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 class FavoritesCell: UITableViewCell {
     
@@ -22,7 +23,9 @@ class FavoritesCell: UITableViewCell {
     private let restauarantImageView: UIImageView = {
         let iv = UIImageView()
         iv.setDimensions(height: 150, width: 150)
-        iv.backgroundColor = .gray
+        iv.contentMode = .scaleAspectFill
+        iv.layer.cornerRadius = 150 / 2
+        iv.layer.masksToBounds = true
         return iv
     }()
     
@@ -61,7 +64,7 @@ class FavoritesCell: UITableViewCell {
         return label
     }()
     
-    private lazy var heartButton: UIButton = {
+    lazy var heartButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "heart.fill"), for: .normal)
         button.imageView?.addConstraintsToFillView(view: button)
@@ -72,7 +75,15 @@ class FavoritesCell: UITableViewCell {
     
     //MARK: - Properties
     
+    private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
+    var hasFavorited: Bool! = true
+    var favoritesVC: FavoritesVC?
+    var favorite: Favorite? {
+        didSet {
+            updateLabels()
+        }
+    }
     
     //MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -88,10 +99,56 @@ class FavoritesCell: UITableViewCell {
     //MARK: - Selectors
     
     @objc func handleUnfavorite() {
-        print("handle unfavorite here...")
+        removeItems()
     }
     
     //MARK: - Helpers
+    
+    private func removeItems() {
+        guard let itemToUnfavorite = self.favorite else { return }
+        favoritesVC = FavoritesVC()
+        
+        //Delete object
+        self.context.delete(itemToUnfavorite)
+        //Save the data
+        do {
+            try self.context.save()
+        } catch {
+            print("DEBUG: Error in saving context when unfavoriting")
+        }
+        
+        DispatchQueue.main.async {
+            self.hasFavorited = false
+            self.alpha = 0
+            self.favoritesVC?.fetchRestaurants()
+        }
+    }
+    
+    private func updateLabels() {
+        guard let favorite = self.favorite else { return }
+        nameLabel.text = favorite.name
+        ratingLabel.text = String(favorite.rating)
+        addressLabel.text = favorite.address
+        phoneNumberLabel.text = favorite.phoneNumber
+        
+        let url = URL(string: favorite.imageURL!)
+        var request = URLRequest(url: url!)
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        request.httpMethod = "GET"
+        
+        let session = URLSession.shared
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let image = UIImage(data: data)
+                DispatchQueue.main.async {
+                    self.restauarantImageView.image = image
+                }
+            } else if let error = error {
+                print(error.localizedDescription)
+            }
+        }
+        task.resume()
+    }
     
     private func configureUI() {
         selectionStyle = .none
@@ -99,10 +156,10 @@ class FavoritesCell: UITableViewCell {
         
         addSubview(containerView)
         containerView.fillViewWithPadding(view: self,
-                                         paddingTop: 12,
-                                         paddingLeading: 20,
-                                         paddingBottom: 12,
-                                         paddingTrailing: 20)
+                                          paddingTop: 12,
+                                          paddingLeading: 20,
+                                          paddingBottom: 12,
+                                          paddingTrailing: 20)
         
         containerView.addSubview(restauarantImageView)
         restauarantImageView.centerY(inView: self)
@@ -124,20 +181,20 @@ class FavoritesCell: UITableViewCell {
         
         containerView.addSubview(addressLabel)
         addressLabel.anchor(top: ratingLabel.bottomAnchor,
-                           leading: nameLabel.leadingAnchor,
-                           trailing: nameLabel.trailingAnchor,
-                           paddingTop: 18)
+                            leading: nameLabel.leadingAnchor,
+                            trailing: nameLabel.trailingAnchor,
+                            paddingTop: 18)
         
         containerView.addSubview(phoneNumberLabel)
         phoneNumberLabel.anchor(top: addressLabel.bottomAnchor,
-                           leading: nameLabel.leadingAnchor,
-                           trailing: nameLabel.trailingAnchor,
-                           paddingTop: 18)
+                                leading: nameLabel.leadingAnchor,
+                                trailing: nameLabel.trailingAnchor,
+                                paddingTop: 18)
         
         contentView.addSubview(heartButton)
         heartButton.anchor(bottom: containerView.bottomAnchor,
-                             trailing: containerView.trailingAnchor,
-                             paddingBottom: 10,
-                             paddingTrailing: 10)
+                           trailing: containerView.trailingAnchor,
+                           paddingBottom: 10,
+                           paddingTrailing: 10)
     }
 }

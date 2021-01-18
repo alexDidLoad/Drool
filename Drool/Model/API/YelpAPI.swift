@@ -109,6 +109,7 @@ extension MapVC {
                     restaurant.distance = business.value(forKey: "distance") as? Double
                     restaurant.url = business.value(forKey: "url") as? String
                     restaurant.image_url = business.value(forKey: "image_url") as? String
+                    restaurant.phone = business.value(forKey: "phone") as? String
                     
                     let address = (business["location"] as? [String: Any])?["address1"] as? String
                     restaurant.address = address

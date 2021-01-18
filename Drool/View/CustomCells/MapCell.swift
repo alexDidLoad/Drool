@@ -7,9 +7,10 @@
 
 import UIKit
 import MapKit
+import CoreData
 
 protocol MapCellDelegate {
-    func getDirections(forMapItem mapItem: MKMapItem) 
+    func getDirections(forMapItem mapItem: MKMapItem)
 }
 
 class MapCell: UITableViewCell {
@@ -71,10 +72,11 @@ class MapCell: UITableViewCell {
             }
         }
     }
-    
     var delegate: MapCellDelegate?
     var restaurant: Restaurant? { didSet { configureCellLabel() } }
     var hasFavorited: Bool! = false
+    
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     //MARK: - Lifecycle
     
@@ -102,9 +104,9 @@ class MapCell: UITableViewCell {
     }
     
     @objc func handleFavorite() {
-        print("Handle favorite here...")
         hasFavorited.toggle()
         if hasFavorited {
+            saveRestaurant()
             favoriteButton.tintColor = .systemRed
         } else {
             favoriteButton.tintColor = UIColor.lightGray.withAlphaComponent(0.6)
@@ -161,4 +163,29 @@ class MapCell: UITableViewCell {
                                paddingTrailing: 8)
     }
     
+}
+
+//MARK: - CoreData Methods
+
+extension MapCell {
+    
+    func saveRestaurant() {
+        guard let latitude = restaurant?.latitude else { return }
+        guard let longitude = restaurant?.longitude else { return }
+        
+        let newFavorite = Favorite(context: self.context)
+        newFavorite.name = restaurant?.name
+        newFavorite.rating = restaurant?.rating ?? 0.0
+        newFavorite.address = restaurant?.address
+        newFavorite.imageURL = restaurant?.image_url
+        newFavorite.phoneNumber = restaurant?.phone
+        newFavorite.latitude = latitude
+        newFavorite.longitude = longitude
+        
+        do {
+            try self.context.save()
+        } catch {
+            print("DEBUG: Error saving context")
+        }
+    }
 }

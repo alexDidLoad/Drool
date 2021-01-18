@@ -60,11 +60,12 @@ class HomeVC: UIViewController {
 extension HomeVC: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        animateTableView(tableView, atIndexPath: indexPath, presentingVC: foodVC)
-        
         food = Food(cuisine: categoryImageNames[indexPath.row])
         foodData.food = self.food
         foodVC.foodData = foodData
+        
+        foodVC.modalPresentationStyle = .currentContext
+        present(foodVC, animated: true, completion: nil)
     }
 }
 

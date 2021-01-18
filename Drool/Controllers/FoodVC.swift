@@ -15,6 +15,7 @@ class FoodVC: UIViewController {
     
     //MARK: - Properties
     
+    var mapController: MapVC!
     var foodData: FoodCellDataSource! {
         didSet {
             DispatchQueue.main.async {
@@ -54,10 +55,18 @@ class FoodVC: UIViewController {
 extension FoodVC: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let mapController = MapVC()
+        mapController = MapVC()
+        mapController.delegate = self
         mapController.modalPresentationStyle = .fullScreen
         mapController.foodCategory = foodData.selectedCategory[indexPath.row]
-       
-        animateTableView(tableView, atIndexPath: indexPath, presentingVC: mapController)
+        present(mapController, animated: true, completion: nil)
+    }
+}
+
+//MARK: - MapViewController Delegate
+
+extension FoodVC: MapViewControllerDelegate {
+    func dismiss() {
+        self.dismiss(animated: true, completion: nil)
     }
 }

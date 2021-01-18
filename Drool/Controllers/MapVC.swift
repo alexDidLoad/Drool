@@ -9,6 +9,10 @@ import UIKit
 import MapKit
 import CoreLocation
 
+protocol MapViewControllerDelegate {
+    func dismiss()
+}
+
 class MapVC: UIViewController {
     
     //MARK: - UIComponents
@@ -46,6 +50,7 @@ class MapVC: UIViewController {
     
     //MARK: - Properties
     
+    var delegate: MapViewControllerDelegate?
     var restaurantNumber: [String]! { didSet { fetchRestaurants() } }
     var restaurants: [Restaurant] = [] { didSet { mapSearchView.restaurants = self.restaurants } }
     var foodCategory: String! { didSet { centerOnUserLocation(shouldLoadAnnotations: true) } }
@@ -66,7 +71,9 @@ class MapVC: UIViewController {
     }
     
     @objc func handleExit() {
-        self.dismiss(animated: true, completion: nil)
+        dismiss(animated: true) {
+            self.delegate?.dismiss()
+        }
     }
     //MARK: - Helpers
     

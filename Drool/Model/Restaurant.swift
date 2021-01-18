@@ -20,4 +20,5 @@ struct Restaurant: Codable {
     var longitude       : Double?
     var url             : String?
     var image_url       : String?
+    var phone           : String?
 }

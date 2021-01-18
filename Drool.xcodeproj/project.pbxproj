@@ -137,9 +137,8 @@
 			isa = PBXGroup;
 			children = (
 				11CC54D025ABE20900ACA40A /* Food.swift */,
-				11CC54D525ABEF2900ACA40A /* CategoryCellDataSource.swift */,
-				11CC54D825ABEF3000ACA40A /* FoodCellDataSource.swift */,
-				11CC552D25B2324D00ACA40A /* FavoritesCellDataSource.swift */,
+				11CC54F025AFC6B200ACA40A /* Restaurant.swift */,
+				11CC553D25B4ED8C00ACA40A /* CellDataSource */,
 				11CC551F25B0E8A000ACA40A /* API */,
 			);
 			path = Model;
@@ -156,7 +155,6 @@
 		11CC551F25B0E8A000ACA40A /* API */ = {
 			isa = PBXGroup;
 			children = (
-				11CC54F025AFC6B200ACA40A /* Restaurant.swift */,
 				11CC551C25B0001400ACA40A /* YelpAPI.swift */,
 				11CC553425B3C4B500ACA40A /* Keys.swift */,
 			);
@@ -172,6 +170,16 @@
 				11CC553125B2338700ACA40A /* FavoritesCell.swift */,
 			);
 			path = CustomCells;
+			sourceTree = "<group>";
+		};
+		11CC553D25B4ED8C00ACA40A /* CellDataSource */ = {
+			isa = PBXGroup;
+			children = (
+				11CC54D525ABEF2900ACA40A /* CategoryCellDataSource.swift */,
+				11CC54D825ABEF3000ACA40A /* FoodCellDataSource.swift */,
+				11CC552D25B2324D00ACA40A /* FavoritesCellDataSource.swift */,
+			);
+			path = CellDataSource;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
