@@ -59,7 +59,7 @@ extension FoodVC: UITableViewDelegate {
         mapController.delegate = self
         mapController.modalPresentationStyle = .fullScreen
         mapController.foodCategory = foodData.selectedCategory[indexPath.row]
-        present(mapController, animated: true, completion: nil)
+        animateTableView(tableView, atIndexPath: indexPath, presentingVC: mapController)
     }
 }
 

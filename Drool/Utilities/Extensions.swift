@@ -126,7 +126,6 @@ extension UIViewController {
         UIView.animate(withDuration: 0.5, delay: 0.0, usingSpringWithDamping: 1, initialSpringVelocity: .zero, options: .curveEaseInOut) {
             selectedCell?.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
         } completion: { [weak self] _ in
-           
             self?.present(presentingVC!, animated: true)
         }
         UIView.animate(withDuration: 0.3, delay: 0.2, usingSpringWithDamping: 1, initialSpringVelocity: .zero, options: .curveEaseInOut) {

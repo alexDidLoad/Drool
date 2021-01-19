@@ -65,7 +65,7 @@ extension HomeVC: UITableViewDelegate {
         foodVC.foodData = foodData
         
         foodVC.modalPresentationStyle = .currentContext
-        present(foodVC, animated: true, completion: nil)
+        animateTableView(tableView, atIndexPath: indexPath, presentingVC: foodVC)
     }
 }
 
